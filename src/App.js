@@ -22,7 +22,7 @@ const initialFriends = [
 ];
 
 function Button({ children, onClick }) {
-  return <button className="button" onClick={onClick}>{children}</button>
+  return <button className="button" onClick={onClick}>{children} test</button>
 }
 
 export default function App() {
