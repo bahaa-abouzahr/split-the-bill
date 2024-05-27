@@ -21,12 +21,12 @@ body {
   height: 100vh;
   color: #495057;
   display: flex;
-  align-items: center;
+
   justify-content: center;
 }
 
 .app {
-  margin-top: 10rem;
+  margin-top: 5rem;
   min-height: 66vh;
   display: flex;
   flex-direction: column;
@@ -142,7 +142,7 @@ form {
 
 .form-split-bill {
   grid-template-columns: 1fr 17rem;
-  padding: 3.2rem 7rem 3.2rem 4rem;
+  padding: 3.2rem 7rem 3.2rem 2rem;
 }
 
 label {
