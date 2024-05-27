@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/split-the-bill/static/css/main.7d6b768d.css",
-    "main.js": "/split-the-bill/static/js/main.85343122.js",
+    "main.js": "/split-the-bill/static/js/main.aeb1ca7f.js",
     "static/media/afif.jpg": "/split-the-bill/static/media/afif.8bc3afd83e9381084c90.jpg",
     "static/media/fadel.jpg": "/split-the-bill/static/media/fadel.5b42b5ba6eead6ba65ec.jpg",
     "static/media/bahaa.jpg": "/split-the-bill/static/media/bahaa.b8d5f0bc4d96a6042769.jpg",
     "index.html": "/split-the-bill/index.html",
     "main.7d6b768d.css.map": "/split-the-bill/static/css/main.7d6b768d.css.map",
-    "main.85343122.js.map": "/split-the-bill/static/js/main.85343122.js.map"
+    "main.aeb1ca7f.js.map": "/split-the-bill/static/js/main.aeb1ca7f.js.map"
   },
   "entrypoints": [
     "static/css/main.7d6b768d.css",
-    "static/js/main.85343122.js"
+    "static/js/main.aeb1ca7f.js"
   ]
 }
