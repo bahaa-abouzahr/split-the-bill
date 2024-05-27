@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/split-the-bill/static/css/main.c6cc833a.css",
-    "main.js": "/split-the-bill/static/js/main.2d06cb89.js",
+    "main.css": "/split-the-bill/static/css/main.603aa2c6.css",
+    "main.js": "/split-the-bill/static/js/main.85343122.js",
     "static/media/afif.jpg": "/split-the-bill/static/media/afif.8bc3afd83e9381084c90.jpg",
     "static/media/fadel.jpg": "/split-the-bill/static/media/fadel.5b42b5ba6eead6ba65ec.jpg",
     "static/media/bahaa.jpg": "/split-the-bill/static/media/bahaa.b8d5f0bc4d96a6042769.jpg",
     "index.html": "/split-the-bill/index.html",
-    "main.c6cc833a.css.map": "/split-the-bill/static/css/main.c6cc833a.css.map",
-    "main.2d06cb89.js.map": "/split-the-bill/static/js/main.2d06cb89.js.map"
+    "main.603aa2c6.css.map": "/split-the-bill/static/css/main.603aa2c6.css.map",
+    "main.85343122.js.map": "/split-the-bill/static/js/main.85343122.js.map"
   },
   "entrypoints": [
-    "static/css/main.c6cc833a.css",
-    "static/js/main.2d06cb89.js"
+    "static/css/main.603aa2c6.css",
+    "static/js/main.85343122.js"
   ]
 }
