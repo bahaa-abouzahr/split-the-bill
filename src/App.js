@@ -1,50 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import imageBahaa from "./images/bahaa.jpg";
 import imageFadel from "./images/fadel.jpg";
 import imageAfif from "./images/afif.jpg";
 
-const initialFriends = [
+let initialFriends = [
   {
     id: 1,
     name: "Bahaa",
     image: imageBahaa,
     bills: [0],
-    balance: 0,
+    get balance() {
+      return this.bills.reduce((a , b) => a + b, 0);
+    }
+    // balance: function(){
+    //   return this.bills.reduce((a , b) => a + b, 0);
+    // },
   },
   {
     id: 2,
     name: "Fadel",
     image: imageFadel,
     bills: [0],
-    balance: 0,
+    get balance() {
+      return this.bills.reduce((a , b) => a + b, 0);
+    }
   },
   {
     id: 3,
     name: "Afif",
     image: imageAfif,
     bills: [0],
-    balance: 0,
+    get balance() {
+      return this.bills.reduce((a , b) => a + b, 0);
+    }
   },
 ];
 
 let xFlag = true;
+let refreshFlag = true;
 
-function ParseFloat(str,val) {
-  str = str.toString();
-  str = str.slice(0, (str.indexOf(".")) + val + 1); 
-  return Number(str);   
-}
+// localStorage.clear("friends");
+// sessionStorage.clear("friends")
+
+// function ParseFloat(str,val) {
+//   str = str.toString();
+//   str = str.slice(0, (str.indexOf(".")) + val + 1); 
+//   return Number(str);   
+// }
 
 function Button({ children, onClick }) {
   return <button className="button" onClick={onClick}>{children}</button>
 }
 
 export default function App() {
-  const [friends, setFriends] = useState(initialFriends);
+  let friendsList;
+  const storage = sessionStorage.getItem('friends');
+  
+  if(refreshFlag && storage) {
+    friendsList = JSON.parse(storage);
+    refreshFlag = false;
+  }
+
+  const [friends, setFriends] = useState(() => {
+    const savedFriends = sessionStorage.getItem('friends');
+    return savedFriends ? JSON.parse(savedFriends) : initialFriends;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem('friends', JSON.stringify(friends));
+  }, [friends]);
+
 
   function handleSplitBill(bahaa, fadel, afif) {
-
-    console.log(bahaa, fadel, afif);
 
     friends[0].bills.push(bahaa);
     friends[1].bills.push(fadel);
@@ -53,7 +80,12 @@ export default function App() {
     setFriends(friends => 
       friends.map(friend => friend.id ? {...friend, balance: Math.round((friend.bills.reduce((a,b) => a + b, 0))* 1e2 ) / 1e2} : console.log("test"))
     )
-    setTimeout(() => console.log(friends), 3000)
+  }
+
+  function resetData() {
+    localStorage.clear("friends");
+    sessionStorage.clear("friends")
+    window.location.reload();
   }
 
   return (
@@ -63,6 +95,7 @@ export default function App() {
 
       <div className='sidebar'>
         <FriendsList friends={friends} />
+        <Button onClick={resetData}>Reset Data</Button>
       </div>
     </div>
   )
@@ -110,7 +143,7 @@ function Friend({ friend }) {
 }
 
 
-function FormSplitBill({ onSplitBill }) {
+function FormSplitBill({ onSplitBill, saveData }) {
   const [bill, setBill] = useState("");
   const [paidByBahaa, setPaidByBahaa] = useState("");
   const [paidByAfif, setPaidByAfif] = useState("");
@@ -136,9 +169,6 @@ function FormSplitBill({ onSplitBill }) {
 
     const sumBills = convertedBahaa + convertedFadel + convertedAfif;
 
-
-    console.log("type of converted bill", typeof(convertedBill));
-
     if(convertedBill !== sumBills && xFlag) {
       console.log("wrong values");
       console.log(convertedBill, typeof(convertedBill));
@@ -151,6 +181,7 @@ function FormSplitBill({ onSplitBill }) {
     else if(whoIsPaying === 'Afif') onSplitBill(-convertedBahaa, -convertedFadel, convertedBill - convertedAfif);
 
     initializeFormData();
+
   }
 
   function handleSplit(number) {
@@ -166,6 +197,7 @@ function FormSplitBill({ onSplitBill }) {
       setPaidByFadel(Math.round((parseFloat(bill / 4)) * 1e2 ) / 1e2);
       setPaidByAfif(Math.round((parseFloat(bill / 2)) * 1e2 ) / 1e2);
     }
+    
   }
 
   return (
@@ -211,8 +243,8 @@ function FormSplitBill({ onSplitBill }) {
       </select>
 
       <div className="split-buttons">
-        <button className="x3-x4-buttons" onClick={() => handleSplit(3)}>Split x3</button>
-        <button className="x3-x4-buttons" onClick={() => handleSplit(4)}>Split x4</button>
+        <button className="x3-x4-buttons" type="button" onClick={() => handleSplit(3)}>Split x3</button>
+        <button className="x3-x4-buttons" type="button" onClick={() => handleSplit(4)}>Split x4</button>
       </div>
         <Button>Split bill</Button>
       
