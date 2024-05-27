@@ -1,217 +1,221 @@
 import { useState } from "react";
+import imageBahaa from "./images/bahaa.jpg";
+import imageFadel from "./images/fadel.jpg";
+import imageAfif from "./images/afif.jpg";
 
 const initialFriends = [
   {
-    id: 118836,
+    id: 1,
     name: "Bahaa",
-    image: "https://i.pravatar.cc/48?u=118836",
-    balance: -6,
+    image: imageBahaa,
+    bills: [0],
+    balance: 0,
   },
   {
-    id: 933372,
-    name: "Afif",
-    image: "https://i.pravatar.cc/48?u=933372",
-    balance: 20,
-  },
-  {
-    id: 499476,
+    id: 2,
     name: "Fadel",
-    image: "https://i.pravatar.cc/48?u=499476",
+    image: imageFadel,
+    bills: [0],
+    balance: 0,
+  },
+  {
+    id: 3,
+    name: "Afif",
+    image: imageAfif,
+    bills: [0],
     balance: 0,
   },
 ];
+
+let xFlag = true;
+
+function ParseFloat(str,val) {
+  str = str.toString();
+  str = str.slice(0, (str.indexOf(".")) + val + 1); 
+  return Number(str);   
+}
 
 function Button({ children, onClick }) {
   return <button className="button" onClick={onClick}>{children}</button>
 }
 
 export default function App() {
-  const [friends, setFriends] = useState(initialFriends)
-  const [showAddFriend, setShowAddFriend] = useState(false);
-  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [friends, setFriends] = useState(initialFriends);
 
-  function handleShowAddFriend() {
-    setShowAddFriend(!showAddFriend);
-  }
+  function handleSplitBill(bahaa, fadel, afif) {
 
-  function handleAddFriend(friend) {
-    setFriends(friends => [...friends, friend]);
-    setShowAddFriend(false);
-  }
+    console.log(bahaa, fadel, afif);
 
-  function handleSelection(friend) {
-    setSelectedFriend((cur) => cur?.id === friend.id ? null : friend);
-     setShowAddFriend(false)
-  }
-
-  function handleSplitBill(value) {
+    friends[0].bills.push(bahaa);
+    friends[1].bills.push(fadel);
+    friends[2].bills.push(afif);
 
     setFriends(friends => 
-      friends.map(friend => friend.id === selectedFriend.id 
-        ? {...friend, balance: friend.balance + value} 
-        : friend)
+      friends.map(friend => friend.id ? {...friend, balance: Math.round((friend.bills.reduce((a,b) => a + b, 0))* 1e2 ) / 1e2} : console.log("test"))
     )
-
-    setSelectedFriend(null);
+    setTimeout(() => console.log(friends), 3000)
   }
 
   return (
     <div className='app'>
+
+      {<FormSplitBill onSplitBill={handleSplitBill} />}
+
       <div className='sidebar'>
-        <FriendsList 
-          friends={friends} 
-          selectedFriend={selectedFriend} 
-          onSelection={handleSelection} 
-        />
-
-        {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
-
-        <Button onClick={handleShowAddFriend}>{!showAddFriend ? "Add Friend" : "Close"}</Button>
-
+        <FriendsList friends={friends} />
       </div>
-
-      {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} onSplitBill={handleSplitBill} />}
     </div>
   )
 }
 
-
-function FriendsList({ friends, selectedFriend, onSelection }) {
-
+function FriendsList({ friends }) {
   return (
     <ul>
       {friends.map((friend) =>(
         <Friend 
           friend={friend} 
-          selectedFriend={selectedFriend} 
-          onSelection={onSelection} key={friend.id} 
+          key={friend.id} 
         />
       ))}
     </ul>
   )
 }
 
-function Friend({ friend, selectedFriend, onSelection }) {
-  const isSelected = selectedFriend?.id === friend.id;
+function Friend({ friend }) {
 
   return (
-    <li className={isSelected ? 'selected' : ''}>
+    <li>
       <img src={friend.image} alt={friend.name} />
       <h3>{friend.name}</h3>
       
       {friend.balance < 0 && (
         <p className="red">
-          You owe {friend.name} {Math.abs(friend.balance)}€
-        </p>
-      )}
-      {friend.balance > 0 && (
-        <p className="green">
-          {friend.name} owes you {Math.abs(friend.balance)}€
-        </p>
-      )}
-      {friend.balance === 0 && (
-        <p>
-          You and {friend.name} are even
+          Should pay {Math.abs(friend.balance)}€
         </p>
       )}
 
-      <Button onClick={() => onSelection(friend)}>
-        {isSelected ? 'Close' : 'Select'}
-      </Button>
+      {friend.balance > 0 && (
+        <p className="green">
+          should get back {Math.abs(friend.balance)}€
+        </p>
+      )}
+
+      {friend.balance === 0 && (
+        <p>
+          Even
+        </p>
+      )}
     </li>
   )
 }
 
 
-function FormAddFriend({ onAddFriend }) {
-  const [name, setName] = useState('');
-  const [image, setImage] = useState('https://i.pravatar.cc/48');
-
-  function handleSubmit(e){
-    e.preventDefault();
-
-    if(!name || !image) return;
-
-    const id = crypto.randomUUID();
-
-    const newFriend = {
-      id,
-      name,
-      image: `${image}?=${id}`,
-      balance: 0,
-    };
-
-    onAddFriend(newFriend);
-    
-    setName('');
-    setImage('https://i.pravatar.cc/48');
-
-  }
-
-  return (
-      <form className="form-add-friend" onSubmit={handleSubmit}>
-        <label>👫 Friend name</label>
-        <input 
-          type="text" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        <label>🖼 Image URL</label>
-        <input 
-          type="text" 
-          value={image} 
-          onChange={(e) => setImage(e.target.value)}
-        />
-
-        <Button>Add</Button>
-      </form>
-  )
-}
-
-
-function FormSplitBill({ selectedFriend, onSplitBill }) {
+function FormSplitBill({ onSplitBill }) {
   const [bill, setBill] = useState("");
-  const [paidByUser, setPaidByUser] = useState("");
-  const paidByFriend = bill ? bill - paidByUser : '';
-  const [whoIsPaying, setWhoIsPaying] = useState('user')
+  const [paidByBahaa, setPaidByBahaa] = useState("");
+  const [paidByAfif, setPaidByAfif] = useState("");
+  const [paidByFadel, setPaidByFadel] = useState("");
+  const [whoIsPaying, setWhoIsPaying] = useState('Bahaa')
 
+  function initializeFormData() {
+    setBill('');
+    setPaidByBahaa('');
+    setPaidByAfif('');
+    setPaidByFadel('');
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    if(!bill || !paidByUser) return;
+    if(!bill || !paidByBahaa || !paidByAfif || !paidByFadel) return;
 
-    onSplitBill(whoIsPaying === 'user' ? paidByFriend : -paidByUser);
+    const convertedBill = parseFloat(bill);
+    const convertedBahaa = parseFloat(paidByBahaa);
+    const convertedFadel = parseFloat(paidByFadel);
+    const convertedAfif = parseFloat(paidByAfif);
 
+    const sumBills = convertedBahaa + convertedFadel + convertedAfif;
+
+
+    console.log("type of converted bill", typeof(convertedBill));
+
+    if(convertedBill !== sumBills && xFlag) {
+      console.log("wrong values");
+      console.log(convertedBill, typeof(convertedBill));
+      console.log(sumBills, typeof(sumBills));
+      return;
+    }
+
+    if(whoIsPaying === 'Bahaa') onSplitBill(bill - convertedBahaa, -convertedFadel, -convertedAfif);
+    else if(whoIsPaying === 'Fadel') onSplitBill(-convertedBahaa, convertedBill - convertedFadel, -convertedAfif)
+    else if(whoIsPaying === 'Afif') onSplitBill(-convertedBahaa, -convertedFadel, convertedBill - convertedAfif);
+
+    initializeFormData();
+  }
+
+  function handleSplit(number) {
+    xFlag = false;
+
+    if(number === 3){
+      setPaidByBahaa(Math.round((parseFloat(bill / 3)) * 1e2 ) / 1e2);
+      setPaidByFadel(Math.round((parseFloat(bill / 3)) * 1e2 ) / 1e2);
+      setPaidByAfif(Math.round((parseFloat(bill / 3)) * 1e2 ) / 1e2);
+    }
+    else {
+      setPaidByBahaa(Math.round((parseFloat(bill / 4)) * 1e2 ) / 1e2);
+      setPaidByFadel(Math.round((parseFloat(bill / 4)) * 1e2 ) / 1e2);
+      setPaidByAfif(Math.round((parseFloat(bill / 2)) * 1e2 ) / 1e2);
+    }
   }
 
   return (
     <form className="form-split-bill" onSubmit={handleSubmit}>
-      <h2>Split a bill with {selectedFriend.name}</h2>
-
+      <h2>Split a bill</h2>
+    
       <label>💰 Bill value</label>
-      <input type="text" value={bill} onChange={(e) => setBill(Number(e.target.value))} />
+      <input type="text" value={bill} onChange={(e) => setBill(e.target.value)} />
 
-      <label>🧑 Your expense</label>
+      <label>🧑 Bahaa bill</label>
       <input 
         type="text" 
-        value={paidByUser} 
+        value={paidByBahaa} 
         onChange={(e) => 
-          setPaidByUser(
-            Number(e.target.value) > bill ? paidByUser : Number(e.target.value))} 
+          setPaidByBahaa(
+            parseFloat(e.target.value) > parseFloat(bill) ? paidByBahaa : e.target.value)} 
       />
 
-      <label>👫 {selectedFriend.name}'s expense</label>
-      <input type="text" disabled value={paidByFriend} />
+      <label>🧑 Fadel's bill</label>
+      <input 
+        type="text" 
+        value={paidByFadel} 
+        onChange={(e) => 
+          setPaidByFadel(
+            parseFloat(e.target.value) > parseFloat(bill) ? paidByFadel : e.target.value)} 
+      />
 
-      <label>🤑 Who is paying the bill</label>
+      <label>🧑 Afif bill</label>
+      <input 
+        type="text" 
+        value={paidByAfif} 
+        onChange={(e) => 
+          setPaidByAfif(
+            parseFloat(e.target.value) > parseFloat(bill) ? paidByAfif : e.target.value)} 
+      />
+
+
+      <label>🤑 Who paid the bill</label>
       <select value={whoIsPaying} onChange={(e) => setWhoIsPaying(e.target.value)}>
-        <option value='user'>You</option>
-        <option value='friend'>{selectedFriend.name}</option>
+        <option value='Bahaa'>Bahaa</option>
+        <option value='Fadel'>Fadel</option>
+        <option value='Afif'>Afif</option>
       </select>
 
-      <Button>Split bill</Button>
+      <div className="split-buttons">
+        <button className="x3-x4-buttons" onClick={() => handleSplit(3)}>Split x3</button>
+        <button className="x3-x4-buttons" onClick={() => handleSplit(4)}>Split x4</button>
+      </div>
+        <Button>Split bill</Button>
+      
     </form>
   ) 
 }

@@ -12,7 +12,7 @@
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 50%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
@@ -26,11 +26,11 @@ body {
 }
 
 .app {
+  margin-top: 10rem;
   min-height: 66vh;
-  display: grid;
-  grid-template-columns: 34rem 44rem;
-  column-gap: 4rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  column-gap: 3rem;
 }
 
 .button {
@@ -53,7 +53,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   margin-bottom: 2rem;
 }
 
@@ -89,15 +89,6 @@ body {
   grid-column: 2;
 }
 
-.sidebar li .button {
-  grid-row: span 2;
-  grid-column: 3;
-}
-
-.sidebar > .button {
-  float: right;
-  margin-right: 1.2rem;
-}
 
 .green {
   color: #66a80f;
@@ -107,8 +98,40 @@ body {
   color: #e03131;
 }
 
+/* .split-buttons {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  grid-template-columns: auto auto;
+} */
+
+.split-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 0.6rem;
+
+}
+
+.x3-x4-buttons {
+  width: 10rem; 
+  background-color: var(--color-medium);
+  color: #343a40;
+  padding: 0.8rem 0.8rem;
+  border: none;
+  border-radius: 7px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.x3-x4-buttons:hover {
+  background-color: var(--color-dark);
+}
+
 form {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   display: grid;
   align-items: center;
   gap: 1.2rem;
@@ -117,14 +140,9 @@ form {
   border-radius: 7px;
 }
 
-.form-add-friend {
-  grid-template-columns: 1fr 1.5fr;
-  margin-bottom: 1.6rem;
-  padding: 1.2rem;
-}
 .form-split-bill {
-  grid-template-columns: 1fr 12rem;
-  padding: 3.2rem 4rem;
+  grid-template-columns: 1fr 17rem;
+  padding: 3.2rem 7rem 3.2rem 4rem;
 }
 
 label {
